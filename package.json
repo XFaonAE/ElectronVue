@@ -1,0 +1,24 @@
+{
+  "name": "electronvue",
+  "version": "0.0.1",
+  "description": "Quickly implement Vue framework into your Electron apps with ease",
+  "main": " ",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AxeriDev/ElectronVue.git"
+  },
+  "keywords": [
+    "cli",
+    "vuejs",
+    "electronjs"
+  ],
+  "author": "Axeri <dev@axeri.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AxeriDev/ElectronVue/issues"
+  },
+  "homepage": "https://github.com/AxeriDev/ElectronVue#readme"
+}
