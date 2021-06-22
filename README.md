@@ -7,5 +7,5 @@ This CLI ( Command Line Interface ) tools makes it easy to create ElectronJS and
 ###### Get started
 First lets install this tools with NPM ( Node Package Manager ) with the following command:
 ```bash
-npm install --global @axeri/electronvue
+npm install --global https://github.com/AxeriDev/ElectronVue
 ```
