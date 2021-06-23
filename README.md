@@ -1,11 +1,17 @@
 # ElectronVue
-Quickly implement Vue framework into your Electron apps with ease
+Create ElectronJS apps with ease integrated with VueJS
 
-###### What's this?
-This CLI ( Command Line Interface ) tools makes it easy to create ElectronJS and VueJS applications together!
+###### What is this?
+This is a CLI based tool that is focused on closing the bridge between ElectronJS and VueJS.
 
-###### Get started
-First lets install this tools with NPM ( Node Package Manager ) with the following command:
+## Table of Contents
+ - [Installation](#installation)
+ - [Usage](#usage)
+
+## Installation
+To install this CLI tool, run the following command...
 ```bash
-npm install --global @axeri/electronvue
+npm install --global https://github.com/AxeriDev/ElectronVue
 ```
+This will install it globally making it accessible through out your entire device.
+If you want to only install the library in the project, remove the `--global` flag.
