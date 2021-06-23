@@ -48,5 +48,36 @@ class Main {
         });
     }
 }
+
+const main = new Main();
 ```
 **NOTE**: Make sure the `BrowserWindow` loads from the following URL: `http://localhost:8080` as this is the URL VueJS will start its development server at.
+<br>
+Were almost there now! Now we need to initialize electron-vue and then run dev.
+
+To initialize electron-vue, run the following command...
+```bash
+electron-vue init
+```
+
+And now all we need to do is run it!
+```bash
+electron-vue dev
+```
+**NOTE**: after `dev` and `init` you can add one more parameter which can specify where the project root is.
+
+### And thats it!
+##### Important
+Some users may put their electron main script in another directory, for those users, you must provide a config for electron-vue and set the electron main script location like the following...
+###### electron-vue-project/electron-vue.json
+```json
+{
+    "electron-main-path": "./src/electron/Main.js"
+}
+```
+
+# Licence
+This library is under the MIT licence
+
+# Axeri
+Feel free to fork this CLI tool, credits arn't needed, but we appreciate it greatly! :) Happy Coding!!
