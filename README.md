@@ -80,4 +80,4 @@ Some users may put their electron main script in another directory, for those us
 This library is under the MIT licence
 
 # Axeri
-Feel free to fork this CLI tool, credits arn't needed, but we appreciate it greatly! :) Happy Coding!!
+Feel free to fork this CLI tool, credits aren't needed, but we appreciate it greatly! :) Happy Coding!!
