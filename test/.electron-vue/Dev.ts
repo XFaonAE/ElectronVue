@@ -29,7 +29,6 @@ class Dev {
             directory = process.env.COMMAND_ARGS.split(",")[1];
         }
         const projectRoot = Path.join(process.env.RUN_DIRECTORY, directory, "./");
-        console.log(projectRoot);
         ChildProcess.exec("cd " + projectRoot + " && npx vue-cli-service serve").stdout.on("data", (data) => {
             if (data == "No issues found.\n") {
                 CliSpinner.stop(Chalk.hex("#50ffab")("✓"));
