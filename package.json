@@ -1,14 +1,19 @@
 {
-  "name": "electronvue",
+  "name": "@axerillc/electronvue",
   "version": "0.0.1",
-  "description": "Quickly implement Vue framework into your Electron apps with ease",
+  "description": "",
   "main": " ",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:init": "electron-vue init ./test",
+    "test:dev": "electron-vue dev ./test",
+    "test": "npm run test:init && npm run test:dev"
+  },
+  "bin": {
+    "electron-vue": "bin/ElectronVue.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AxeriDev/ElectronVue.git"
+    "url": "git+https://github.com/AxerDev/ElectronVue.git"
   },
   "keywords": [
     "cli",
@@ -18,7 +23,13 @@
   "author": "Axeri <dev@axeri.net>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/AxeriDev/ElectronVue/issues"
+    "url": "https://github.com/AxerDev/ElectronVue/issues"
   },
-  "homepage": "https://github.com/AxeriDev/ElectronVue#readme"
+  "homepage": "https://github.com/AxerDev/ElectronVue#readme",
+  "dependencies": {
+    "@axerillc/clispinner": "github:AxeriDev/CliSpinner",
+    "chalk": "^4.1.1",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.4"
+  }
 }

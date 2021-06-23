@@ -1,0 +1,4 @@
+{
+    "vue-serve-command": "npm run serve",
+    "electron-main-script": "./src/electron/Main.js"
+}
