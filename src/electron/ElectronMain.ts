@@ -31,7 +31,8 @@ class ElectronMain {
             height: 600,
             webPreferences: {
                 contextIsolation: false,
-                nodeIntegration: true
+                nodeIntegration: true,
+                webviewTag: true
             }
         });
         return window;
