@@ -10,6 +10,9 @@ var child_process_1 = require("child_process");
 var electron_1 = __importDefault(require("electron"));
 var readline_1 = __importDefault(require("readline"));
 var ComponentUtils_1 = __importDefault(require("./ComponentUtils"));
+var webpack_dev_server_1 = __importDefault(require("webpack-dev-server"));
+var webpack_1 = __importDefault(require("webpack"));
+var webpack_config_js_1 = __importDefault(require("../../webpack.config.js"));
 var DevCli = /** @class */ (function () {
     /**
      * ElectronVue development command script
@@ -101,7 +104,6 @@ var DevCli = /** @class */ (function () {
                                 }
                                 else {
                                     _this.vueProcess = "starting...";
-                                    cli_spinner_1.default.write("Starting VueJS development server...");
                                     _this.startRenderer().then(function (vueProcess) {
                                         _this.vueProcess = vueProcess;
                                         cli_spinner_1.default.stop("✓");
@@ -138,15 +140,16 @@ var DevCli = /** @class */ (function () {
         return new Promise(function (resolve, reject) {
             // Start the renderer
             ComponentUtils_1.default.loadAllKeys(_this.projectConfig).then(function () {
-                var _a;
-                var rendererProcess = child_process_1.exec("npx webpack serve --mode development --hot", {
-                    cwd: path_1.default.join(__dirname, "../../")
+                // Start Webpack development server
+                webpack_config_js_1.default.mode = "development";
+                var server = new webpack_dev_server_1.default(webpack_1.default(webpack_config_js_1.default), {
+                    quiet: true
                 });
-                // Check if the renderer was successful
-                (_a = rendererProcess.stdout) === null || _a === void 0 ? void 0 : _a.on("data", function (data) {
-                    if (data == "\x1B[34mi\x1B[39m \x1B[90m｢wdm｣\x1B[39m: Compiled successfully.\n") {
-                        resolve(rendererProcess);
-                    }
+                cli_spinner_1.default.write("Starting VueJS development server... \n");
+                // Listen with dev server
+                server.listen(8080, "localhost", function (error) {
+                    error === null || error === void 0 ? void 0 : error.console.log(error);
+                    resolve(server);
                 });
             });
         });
@@ -160,7 +163,7 @@ var DevCli = /** @class */ (function () {
         if (options === void 0) { options = []; }
         return new Promise(function (resolve, reject) {
             // Start electron
-            var electronProcess = child_process_1.spawn(electron_1.default, [path_1.default.join(__dirname, "../electron/ElectronMain.js")]);
+            var electronProcess = child_process_1.spawn(electron_1.default + "", [path_1.default.join(__dirname, "../electron/ElectronMain.js")]);
             electronProcess.stdout.on("data", function (data) {
                 resolve(electronProcess);
             });

@@ -5,6 +5,9 @@ import { exec, spawn } from "child_process";
 import electron from "electron";
 import readLineConstructor from "readline";
 import componentUtils from "./ComponentUtils";
+import WebpackDevServer from "webpack-dev-server";
+import webpack from "webpack";
+import webpackConfig from "../../webpack.config.js";
 
 export default class DevCli {
     /**
@@ -134,7 +137,6 @@ export default class DevCli {
                                     console.log(chalk.hex("#ff7777")("[ Error ]"), "The renderer is already running and cannot be restarted");
                                 } else {
                                     this.vueProcess = "starting...";
-                                    cliSpinner.write("Starting VueJS development server...");
                                     
                                     this.startRenderer().then((vueProcess: any) => {
                                         this.vueProcess = vueProcess;
@@ -173,15 +175,17 @@ export default class DevCli {
         return new Promise((resolve: any, reject: any) => {
             // Start the renderer
             componentUtils.loadAllKeys(this.projectConfig).then(() => {
-                const rendererProcess = exec("npx webpack serve --mode development --hot", {
-                    cwd: path.join(__dirname, "../../")
+                // Start Webpack development server
+                webpackConfig.mode = "development";
+                const server = new WebpackDevServer(webpack(webpackConfig), {
+                    quiet: true
                 });
+                cliSpinner.write("Starting VueJS development server... \n");
 
-                // Check if the renderer was successful
-                rendererProcess.stdout?.on("data", (data: string) => {
-                    if (data == "\x1B[34mi\x1B[39m \x1B[90m｢wdm｣\x1B[39m: Compiled successfully.\n") {
-                        resolve(rendererProcess);
-                    }
+                // Listen with dev server
+                server.listen(8080, "localhost", (error: any) => {
+                    error?.console.log(error);
+                    resolve(server);
                 });
             });
         });
@@ -195,7 +199,7 @@ export default class DevCli {
     public startElectron(options: string[] = []) {
         return new Promise((resolve: any, reject: any) => {
             // Start electron
-            const electronProcess = spawn(electron, [ path.join(__dirname, "../electron/ElectronMain.js") ]);
+            const electronProcess = spawn(electron + "", [ path.join(__dirname, "../electron/ElectronMain.js") ]);
             electronProcess.stdout.on("data", (data: any) => {
                 resolve(electronProcess);
             });

@@ -27,6 +27,8 @@
   "dependencies": {
     "@axerillc/cli-spinner": "github:AxeriDev/CliSpinner",
     "chalk": "^4.1.1",
+    "less": "^4.1.1",
+    "less-loader": "^10.0.0",
     "node-bash-title": "^0.0.2",
     "typescript": "^4.3.4"
   },

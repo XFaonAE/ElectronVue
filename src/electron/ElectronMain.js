@@ -21,6 +21,7 @@ var ElectronMain = /** @class */ (function () {
         var window = new BrowserWindow({
             width: 1000,
             height: 600,
+            frame: false,
             webPreferences: {
                 contextIsolation: false,
                 nodeIntegration: true,

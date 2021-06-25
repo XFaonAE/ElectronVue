@@ -5,11 +5,15 @@ const path = require("path");
 
 module.exports = {
     entry: path.join(__dirname, "./src/vue/main.js"),
+    infrastructureLogging: {
+        level: "error" 
+    },
+    stats: "errors-only",
     module: {
         rules: [
-        { test: /\.js$/, use: "babel-loader" },
-        { test: /\.vue$/, use: "vue-loader" },
-        { test: /\.css$/, use: ["vue-style-loader", "css-loader"]},
+            { test: /\.js$/, use: "babel-loader" },
+            { test: /\.vue$/, use: "vue-loader" },
+            { test: /\.css$/, use: ["vue-style-loader", "css-loader"]}
         ]
     },
     plugins: [
