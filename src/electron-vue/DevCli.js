@@ -114,6 +114,9 @@ var DevCli = /** @class */ (function () {
                                     });
                                 }
                                 break;
+                            case "vue-update-assets":
+                                ComponentUtils_1.default.loadAllKeys(_this.projectConfig);
+                                break;
                         }
                         break;
                     case "stop":

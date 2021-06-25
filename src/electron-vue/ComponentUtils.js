@@ -27,6 +27,17 @@ var ComponentUtils = /** @class */ (function () {
         return fs_1.default.readdirSync(config.viewsDir);
     };
     /**
+     * Load asset
+     * @param { string } outDir Output directory name
+     * @param { string } inPath Exact file path for asset
+     */
+    ComponentUtils.loadAsset = function (outPath, inPath) {
+        var assetRaw = fs_1.default.readFileSync(inPath);
+        fs_1.default.writeFile(path_1.default.join(__dirname, "../vue/", outPath), assetRaw, function (error) {
+            error === null || error === void 0 ? void 0 : error.console.log(error);
+        });
+    };
+    /**
      * Load all key files
      * @param { string[] } config Working directory config
      * @return { Promise }
@@ -40,26 +51,32 @@ var ComponentUtils = /** @class */ (function () {
             var mainVueSfc = fs_1.default.readFileSync(config.vueMainSfcPath);
             // Fill content to real source vue dir
             components.forEach(function (value) {
-                fs_1.default.writeFile(path_1.default.join(__dirname, "../vue/components/", value), fs_1.default.readFileSync(path_1.default.join(config.componentsDir, value)), function (error) {
-                    if (error) {
-                        console.log(error);
-                    }
-                });
+                _this.loadAsset(path_1.default.join("components", value), path_1.default.join(config.componentsDir, value));
             });
             views.forEach(function (value) {
-                fs_1.default.writeFile(path_1.default.join(__dirname, "../vue/views", value), fs_1.default.readFileSync(path_1.default.join(config.viewsDir, value)), function (error) {
-                    if (error) {
-                        console.log(error);
-                    }
-                });
+                _this.loadAsset(path_1.default.join("views", value), path_1.default.join(config.viewsDir, value));
             });
             fs_1.default.writeFile(path_1.default.join(__dirname, "../vue/Main.vue"), mainVueSfc, function (error) {
-                if (error) {
-                    console.log(error);
-                }
+                error === null || error === void 0 ? void 0 : error.console.log(error);
             });
-            console.log("Filed copied");
+            _this.startLookOut(config);
             resolve();
+        });
+    };
+    /**
+     * Start lookout file system
+     */
+    ComponentUtils.startLookOut = function (config) {
+        var _this = this;
+        // Listen to each file category
+        fs_1.default.watch(config.componentsDir, function (type, filename) {
+            _this.loadAsset(path_1.default.join("components", filename), path_1.default.join(config.componentsDir, filename));
+        });
+        fs_1.default.watch(config.viewsDir, function (type, filename) {
+            _this.loadAsset(path_1.default.join("views", filename), path_1.default.join(config.viewsDir, filename));
+        });
+        fs_1.default.watch(config.vueMainSfcPath, function (type, filename) {
+            _this.loadAsset(path_1.default.join("./", "Main.vue"), filename);
         });
     };
     return ComponentUtils;

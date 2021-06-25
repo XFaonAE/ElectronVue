@@ -1,6 +1,11 @@
 <template>
     <div>
-        <h1>Electron Vue</h1>
-        <p>A project by Axeri Development LLC</p>
+        This text will update
     </div>
 </template>
+
+<style scoped>
+    * {
+        font-family: sans-serif;
+    }
+</style>

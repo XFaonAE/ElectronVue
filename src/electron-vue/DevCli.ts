@@ -148,6 +148,10 @@ export default class DevCli {
                                     });
                                 }
                                 break;
+
+                            case "vue-update-assets":
+                                componentUtils.loadAllKeys(this.projectConfig);
+                                break;
                         }
                         break;
                     

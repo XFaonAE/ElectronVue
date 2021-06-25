@@ -23,6 +23,18 @@ export default class ComponentUtils {
     }
 
     /**
+     * Load asset
+     * @param { string } outDir Output directory name
+     * @param { string } inPath Exact file path for asset
+     */
+    public static loadAsset(outPath: string, inPath: string) {
+        const assetRaw = fileSystem.readFileSync(inPath);
+        fileSystem.writeFile(path.join(__dirname, "../vue/", outPath), assetRaw, (error: any) => {
+            error?.console.log(error);
+        });
+    }
+
+    /**
      * Load all key files
      * @param { string[] } config Working directory config
      * @return { Promise }
@@ -36,31 +48,37 @@ export default class ComponentUtils {
 
             // Fill content to real source vue dir
             components.forEach((value: any) => {
-                fileSystem.writeFile(path.join(__dirname, "../vue/components/", value), 
-                fileSystem.readFileSync(path.join(config.componentsDir, value)), (error: any) => {
-                    if (error) {
-                        console.log(error);
-                    }
-                });
+                this.loadAsset(path.join("components", value), path.join(config.componentsDir, value));
             });
 
             views.forEach((value: any) => {
-                fileSystem.writeFile(path.join(__dirname, "../vue/views", value), 
-                fileSystem.readFileSync(path.join(config.viewsDir, value)), (error: any) => {
-                    if (error) {
-                        console.log(error);
-                    }
-                })
+                this.loadAsset(path.join("views", value), path.join(config.viewsDir, value));
             });
 
             fileSystem.writeFile(path.join(__dirname, "../vue/Main.vue"), mainVueSfc, (error: any) => {
-                if (error) {
-                    console.log(error);
-                }
+                error?.console.log(error);
             });
 
-            console.log("Filed copied");
+            this.startLookOut(config);
             resolve();
+        });
+    }
+
+    /**
+     * Start lookout file system
+     */
+    public static startLookOut(config: any) {
+        // Listen to each file category
+        fileSystem.watch(config.componentsDir, (type: any, filename: any) => {
+            this.loadAsset(path.join("components", filename), path.join(config.componentsDir, filename));
+        });
+
+        fileSystem.watch(config.viewsDir, (type: any, filename: any) => {
+            this.loadAsset(path.join("views", filename), path.join(config.viewsDir, filename));
+        });
+
+        fileSystem.watch(config.vueMainSfcPath, (type: any, filename: any) => {
+            this.loadAsset(path.join("./", "Main.vue"), filename);
         });
     }
 }

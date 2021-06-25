@@ -12,9 +12,19 @@ export default class ComponentUtils {
      */
     static getAllViews(config: string[]): string[];
     /**
+     * Load asset
+     * @param { string } outDir Output directory name
+     * @param { string } inPath Exact file path for asset
+     */
+    static loadAsset(outPath: string, inPath: string): void;
+    /**
      * Load all key files
      * @param { string[] } config Working directory config
      * @return { Promise }
      */
     static loadAllKeys(config: string[]): Promise<unknown>;
+    /**
+     * Start lookout file system
+     */
+    static startLookOut(config: any): void;
 }
