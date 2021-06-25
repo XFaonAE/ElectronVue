@@ -4,7 +4,7 @@ const webpack = require('webpack');
 const path = require("path");
 
 module.exports = {
-    entry: path.join(__dirname, "./src/vue/VueMain.js"),
+    entry: path.join(__dirname, "./src/vue/main.js"),
     module: {
         rules: [
         { test: /\.js$/, use: "babel-loader" },

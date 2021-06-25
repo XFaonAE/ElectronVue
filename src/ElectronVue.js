@@ -16,10 +16,11 @@ new /** @class */ (function () {
         // Store command arguments
         this.args = process.argv.splice(2);
         this.args = this.args.map(function (value) { return value.toLowerCase(); });
+        this.startedIn = process.cwd();
         // Run command
         switch (this.args[0]) {
             case "dev":
-                new DevCli_1.default();
+                new DevCli_1.default(this);
                 break;
             default:
                 console.log("Invalid argument :(");

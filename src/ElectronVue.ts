@@ -11,6 +11,12 @@ new class ElectronVue {
     public args: string[];
 
     /**
+     * Started process in
+     * @var { string }
+     */
+    public startedIn: string;
+
+    /**
      * Main command handler for ElectronVue
      */
     public constructor() {
@@ -20,11 +26,12 @@ new class ElectronVue {
         // Store command arguments
         this.args = process.argv.splice(2);
         this.args = this.args.map(value => value.toLowerCase());
+        this.startedIn = process.cwd();
         
         // Run command
         switch (this.args[0]) {
             case "dev":
-                new DevCli();
+                new DevCli(this);
                 break;
 
             default: 

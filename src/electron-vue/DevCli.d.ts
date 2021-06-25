@@ -9,7 +9,27 @@ export default class DevCli {
      * @var { any }
      */
     electronProcess: any;
-    constructor();
+    /**
+     * VueJS process
+     * @var { any }
+     */
+    vueProcess: any;
+    /**
+     * ElectronVue main instance
+     * @var { any }
+     */
+    electronVue: any;
+    /**
+     * Current project configuration
+     * @var { string[] }
+     */
+    projectConfig: string[];
+    /**
+     * ElectronVue development command script
+     * @param { any } electronVue ElectronVue instance
+     * @returns { null }
+     */
+    constructor(electronVue: any);
     /**
      * Prepare a command to be ready for use
      * @param { string } rawCommand Raw command

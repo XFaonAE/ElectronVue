@@ -1,0 +1,10 @@
+{
+  "name": "@axeridev/electron-vue_test",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "test": "electron-vue dev"
+  },
+  "author": "",
+  "license": "MIT"
+}
