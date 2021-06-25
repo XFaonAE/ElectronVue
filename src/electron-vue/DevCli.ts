@@ -4,6 +4,7 @@ import chalk from "chalk";
 import { exec, spawn } from "child_process";
 import electron from "electron";
 import readLineConstructor from "readline";
+import componentUtils from "./ComponentUtils";
 
 export default class DevCli {
     /**
@@ -18,19 +19,44 @@ export default class DevCli {
      */
     public electronProcess: any;
 
-    public constructor() {
+    /**
+     * VueJS process
+     * @var { any }
+     */
+    public vueProcess: any;
+
+    /**
+     * ElectronVue main instance
+     * @var { any }
+     */
+    public electronVue: any;
+
+    /**
+     * Current project configuration
+     * @var { string[] }
+     */
+    public projectConfig: string[];
+
+    /**
+     * ElectronVue development command script
+     * @param { any } electronVue ElectronVue instance
+     * @returns { null }
+     */
+    public constructor(electronVue: any) {
         // Initialize vars
+        this.electronVue = electronVue;
         this.electronProcess = null;
+        this.vueProcess = "not started";
         this.readLine = readLineConstructor.createInterface({
             input: process.stdin,
             output: process.stdout
         });
+        this.projectConfig = require(path.join(this.electronVue.startedIn, "electron-vue.config.js"));
 
         // Startup message
-        console.log(chalk.hex("#fff")("───"), chalk.hex("#50ffab")("Electron Vue"), chalk.hex("#fff")("────────────────────"));
-        cliSpinner.write("Starting VueJS development server...");
-        // this.startRenderer().then(() => {
-            cliSpinner.stop("✓");
+        console.log(chalk.hex("#555")("────"), chalk.hex("#fff")("Electron Vue"), chalk.hex("#555")("────────────────────"));
+
+        const runElectronLogic = () => {
             cliSpinner.write("Starting window process...");
             this.startElectron().then((electronProcess: any) => {
                 this.electronProcess = electronProcess;
@@ -40,7 +66,21 @@ export default class DevCli {
                 // Listen for user commands
                 this.listenCommands();
             });
-        // });
+        }
+
+        // Run ElectronJS main if skip renderer is true
+        if (this.electronVue.args[1] == "true") {
+            runElectronLogic();
+            return;
+        }
+
+        // Start VueJS renderer then ElectronJS
+        cliSpinner.write("Starting VueJS development server...");
+        this.startRenderer().then((vueProcess: any) => {
+            this.vueProcess = vueProcess;
+            cliSpinner.stop("✓");
+            runElectronLogic();
+        });
     }
 
     /**
@@ -60,6 +100,7 @@ export default class DevCli {
      * @return { Promise }
      */
     public listenCommands() {
+        // Listen to a command
         this.readLine.question("Electron Vue > ", (response: any) => {
             this.prepareCommand(response).then((newCommand: any) => {
                 switch (newCommand[0]) {
@@ -68,14 +109,52 @@ export default class DevCli {
                         this.restartElectron(this.electronProcess).then((newElectronProcess: any) => {
                             this.electronProcess = newElectronProcess;
                             cliSpinner.stop("✓");
+                            this.listenCommands();
                         });
+                        break;
+
+                    case "get":
+                        switch (newCommand[1]) {
+                            case "config":
+                                console.log(this.projectConfig);
+                                this.listenCommands();
+                                break;
+
+                            case "components":
+                                console.log(componentUtils.getAllComponents(this.projectConfig));
+                                this.listenCommands();
+                                break;
+                        }
+                        break;
+
+                    case "start": 
+                        switch (newCommand[1]) {
+                            case "renderer":
+                                if (this.vueProcess != "not started") {
+                                    console.log(chalk.hex("#ff7777")("[ Error ]"), "The renderer is already running and cannot be restarted");
+                                } else {
+                                    this.vueProcess = "starting...";
+                                    cliSpinner.write("Starting VueJS development server...");
+                                    
+                                    this.startRenderer().then((vueProcess: any) => {
+                                        this.vueProcess = vueProcess;
+                                        cliSpinner.stop("✓");
+                                        cliSpinner.write("Restarting ElectronJS...");
+                                        this.restartElectron(this.electronProcess).then((newElectronProcess: any) => {
+                                            this.electronProcess = newElectronProcess;
+                                            cliSpinner.stop("✓");
+                                            this.listenCommands();
+                                        });
+                                    });
+                                }
+                                break;
+                        }
                         break;
                     
                     case "stop":
                         process.exit(0);
                         break;
                 }
-                cliSpinner.fullStop();
                 this.listenCommands();
             });
         });
@@ -89,18 +168,18 @@ export default class DevCli {
     public startRenderer(options: string[] = []) {
         return new Promise((resolve: any, reject: any) => {
             // Start the renderer
-            const rendererProcess = exec("npx webpack serve --mode development --hot", {
-                cwd: path.join(__dirname, "../../")
-            });
+            componentUtils.loadAllKeys(this.projectConfig).then(() => {
+                const rendererProcess = exec("npx webpack serve --mode development --hot", {
+                    cwd: path.join(__dirname, "../../")
+                });
 
-            // Check if the renderer was successful
-            if (rendererProcess !== null || rendererProcess !== undefined) {
-                rendererProcess.stdout.on("data", (data: string) => {
+                // Check if the renderer was successful
+                rendererProcess.stdout?.on("data", (data: string) => {
                     if (data == "\x1B[34mi\x1B[39m \x1B[90m｢wdm｣\x1B[39m: Compiled successfully.\n") {
-                        resolve();
+                        resolve(rendererProcess);
                     }
                 });
-            }
+            });
         });
     }
 
